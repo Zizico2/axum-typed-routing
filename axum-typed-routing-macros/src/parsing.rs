@@ -29,11 +29,11 @@ impl RouteParser {
         let path = path.strip_prefix('/').unwrap();
 
         let mut path_params = Vec::new();
-        #[allow(clippy::never_loop)]
+
         for path_param in path.split('/') {
             path_params.push((
                 Slash(span),
-                PathParam::new(path_param, span, Box::new(parse_quote!(()))),
+                PathParam::new(path_param, span, Box::new(parse_quote!(())))?,
             ));
         }
 
@@ -86,14 +86,6 @@ impl PathParam {
         matches!(self, Self::Capture(..) | Self::WildCard(..))
     }
 
-    // pub fn lit(&self) -> &LitStr {
-    //     match self {
-    //         Self::Capture(lit, _, _, _) => lit,
-    //         Self::WildCard(lit, _, _, _) => lit,
-    //         Self::Static(lit) => lit,
-    //     }
-    // }
-
     pub fn capture(&self) -> Option<(&Ident, &Type)> {
         match self {
             Self::Capture(_, _, ident, ty, _) => Some((ident, ty)),
@@ -102,9 +94,15 @@ impl PathParam {
         }
     }
 
-    fn new(str: &str, span: Span, ty: Box<Type>) -> Self {
-        if str.starts_with(':') {
-            let str = str.strip_prefix(':').unwrap();
+    fn new(str: &str, span: Span, ty: Box<Type>) -> syn::Result<Self> {
+        let ok = if str.starts_with('{') {
+            let str = str
+                .strip_prefix('{')
+                .unwrap()
+                .strip_suffix('}')
+                .ok_or_else(|| {
+                    syn::Error::new(span, "expected path param to be wrapped in curly braces")
+                })?;
             Self::Capture(
                 LitStr::new(str, span),
                 Brace(span),
@@ -124,7 +122,9 @@ impl PathParam {
             )
         } else {
             Self::Static(LitStr::new(str, span))
-        }
+        };
+
+        Ok(ok)
     }
 }
 

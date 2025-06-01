@@ -189,9 +189,6 @@ impl CompiledRoute {
             if let Some((ident, _ty)) = path_param.capture() {
                 idents.push(ident.clone());
             }
-            // if let Some((_colon, ident, _ty)) = colon {
-            //     idents.push(ident.clone());
-            // }
         }
         for (ident, _ty) in &self.query_params {
             idents.push(ident.clone());
@@ -430,7 +427,7 @@ impl CompiledRoute {
 
             doc = format!(
                 "{doc}
-                
+
 ## OpenAPI
 - Summary: `{summary}`
 - Description: `{description}`

@@ -25,7 +25,7 @@ mod parsing;
 /// ```
 /// - `METHOD` is the HTTP method, such as `GET`, `POST`, `PUT`, etc.
 /// - `PATH` is the path of the route, with optional path parameters and query parameters,
-///     e.g. `/item/:id?amount&offset`.
+///     e.g. `/item/{id}?amount&offset`.
 /// - `STATE` is the type of axum-state, passed to the handler. This is optional, and if not
 ///    specified, the state type is guessed based on the parameters of the handler.
 ///
@@ -34,7 +34,7 @@ mod parsing;
 /// use axum::extract::{State, Json};
 /// use axum_typed_routing_macros::route;
 ///
-/// #[route(GET "/item/:id?amount&offset")]
+/// #[route(GET "/item/{id}?amount&offset")]
 /// async fn item_handler(
 ///     id: u32,
 ///     amount: Option<u32>,
@@ -52,7 +52,7 @@ mod parsing;
 /// This should work for most cases, however when not sufficient, the state type can be specified
 /// explicitly using the `with` keyword:
 /// ```ignore
-/// #[route(GET "/item/:id?amount&offset" with String)]
+/// #[route(GET "/item/{id}?amount&offset" with String)]
 /// ```
 ///
 /// # Internals
@@ -104,7 +104,7 @@ pub fn route(attr: TokenStream, mut item: TokenStream) -> TokenStream {
 /// use axum::extract::{State, Json};
 /// use axum_typed_routing_macros::api_route;
 ///
-/// #[api_route(GET "/item/:id?amount&offset" with String {
+/// #[api_route(GET "/item/{id}?amount&offset" with String {
 ///     summary: "Get an item",
 ///     description: "Get an item by id",
 ///     id: "get-item",

@@ -1,6 +1,6 @@
 [package]
 name = "axum-typed-routing"
-version = "0.2.0"
+version = "0.3.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 keywords = ["axum", "routing", "handler", "typed", "macro"]
@@ -17,17 +17,17 @@ features = ["aide"]
 
 [dependencies]
 axum = "0.8"
+axum-extra = { version = "0.10", features = ["query"] }
 axum-macros = "0.5"
-aide = { version = "0.14", features = ["axum"], optional = true }
-axum-typed-routing-macros = { version = "0.2.0", path = "../axum-typed-routing-macros" }
+aide = { version = "0.14", features = ["axum", "axum-query"], optional = true }
+axum-typed-routing-macros = { version = "0.3.0", path = "../axum-typed-routing-macros" }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["full"] }
 axum-test = { version = "17", features = [] }
-serde = { version = "1", features = ["derive"] }
+serde = { version = "1.0.209", features = ["derive"] }
 json = "0.12"
 schemars = "0.8"
 
 [features]
-default = []
 aide = ["dep:aide"]

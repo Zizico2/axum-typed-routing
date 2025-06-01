@@ -13,7 +13,7 @@ use axum_typed_routing::TypedRouter;
 use axum_typed_routing_macros::route;
 
 /// This is a handler that is documented!
-#[route(GET "/hello/:id?user_id&name")]
+#[route(GET "/hello/{id}?user_id&name")]
 async fn generic_handler_with_complex_options<T: 'static>(
     mut id: u32,
     user_id: String,
@@ -35,7 +35,7 @@ async fn two() -> String {
     String::from("Hello!")
 }
 
-#[route(GET "/three/:id")]
+#[route(GET "/three/{id}")]
 async fn three(id: u32) -> String {
     format!("Hello {id}!")
 }
@@ -112,7 +112,6 @@ async fn test_wildcard() {
     response.assert_status_ok();
     assert_eq!(response.json::<String>(), "foo/bar");
 }
-
 
 #[cfg(feature = "aide")]
 mod aide_support {
@@ -231,4 +230,3 @@ mod aide_support {
             .unwrap()
     }
 }
-
